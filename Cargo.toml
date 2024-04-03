@@ -1,0 +1,9 @@
+[package]
+name = "wallpaper-marecottes-webcam"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4.37"
+reqwest = {version = "0.12.2", features = ["blocking"]}
+wallpaper = {version = "3.2.0", features = ["from_url"]}
