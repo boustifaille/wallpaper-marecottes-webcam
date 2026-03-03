@@ -7,6 +7,11 @@ import urllib.request
 BASE_URL = "https://valleedutrient.roundshot.com/telemarecottes/structure.json"
 
 
+class WallpaperHelperHijack(wallpaper.WallpaperHelper):
+    def get_desktop_environment(self):
+        return 'xfce'
+    
+
 def get_image():
 
     headers = {
@@ -58,7 +63,7 @@ def set_wallpaper():
     path = os.path.abspath("/home/antho/Documents/code/marecottes/image.jpg")
     path_reset = os.path.abspath("/home/antho/Documents/code/marecottes/black.jpg")
 
-    wallpaperHelper = wallpaper.WallpaperHelper()
+    wallpaperHelper = WallpaperHelperHijack()
     wallpaperHelper.set_wallpaper(path_reset, True)
     wallpaperHelper.set_wallpaper(path, True)
 

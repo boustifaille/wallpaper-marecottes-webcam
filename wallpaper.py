@@ -5,7 +5,6 @@ import subprocess
 import re
 import codecs
 import configparser
-import glob
 import gi
 gi.require_version("Gio", "2.0")
 
