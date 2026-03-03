@@ -53,18 +53,28 @@ def get_image():
     data = json.loads(response.text)
     image_url = data["images"][0]['structure']['full']['url_full']
 
-    urllib.request.urlretrieve(image_url, '/home/antho/Documents/code/marecottes/image.jpg')
 
-    return True
+    # get the last file used
+    picture_fullpath = f"/home/antho/Documents/code/marecottes/picture.jpg"
+    image_fullpath = f"/home/antho/Documents/code/marecottes/image.jpg"
+
+    picture_last_mod = os.path.getmtime(picture_fullpath)
+    image_last_mod = os.path.getmtime(image_fullpath)
+
+    if image_last_mod > picture_last_mod: fullpath = picture_fullpath
+    else: fullpath = image_fullpath
+
+    print(fullpath)
+
+    urllib.request.urlretrieve(image_url, fullpath)
+
+    return fullpath
 
 
-def set_wallpaper():
-    # we need to reset it to another file name : https://gitlab.xfce.org/xfce/xfdesktop/-/issues/416
-    path = os.path.abspath("/home/antho/Documents/code/marecottes/image.jpg")
-    path_reset = os.path.abspath("/home/antho/Documents/code/marecottes/black.jpg")
+def set_wallpaper(image_path):
+    path = os.path.abspath(image_path)
 
     wallpaperHelper = WallpaperHelperHijack()
-    wallpaperHelper.set_wallpaper(path_reset, True)
     wallpaperHelper.set_wallpaper(path, True)
 
 
@@ -74,7 +84,7 @@ def main():
     result = get_image()
     if result is None: return
 
-    set_wallpaper()
+    set_wallpaper(result)
     print('Successful')
 
 
