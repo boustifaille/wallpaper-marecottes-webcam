@@ -103,6 +103,7 @@ class WallpaperHelper:
                         ["xfconf-query", "-c", "xfce4-desktop", "-l"],
                         text=True
                     )
+                    
                     # Filter only last-image properties (workspace 0)
                     monitor_props = [line for line in props_output.splitlines() if line.endswith("/workspace0/last-image")]
 
