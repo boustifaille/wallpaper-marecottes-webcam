@@ -1,16 +1,19 @@
-import requests
-import os
-import wallpaper
 import json
+import os
 import urllib.request
+import requests
+import wallpaper
+import datetime
+
+# TODO: only update image if hash changes
 
 BASE_URL = "https://valleedutrient.roundshot.com/telemarecottes/structure.json"
 
 
 class WallpaperHelperHijack(wallpaper.WallpaperHelper):
     def get_desktop_environment(self):
-        return 'xfce'
-    
+        return "xfce"
+
 
 def get_image():
 
@@ -35,40 +38,29 @@ def get_image():
 
     session = requests.Session()
 
+    session.cookies.update({"rs-ga-stats": "disabled"})
 
-    session.cookies.update({
-        "rs-ga-stats": "disabled"
-    })
-
-    response = session.get(
-        BASE_URL,
-        headers=headers
-    )
+    response = session.get(BASE_URL, headers=headers)
 
     if response.status_code != 200:
-        print('Error, status code: ', response.status_code)
+        print("Error, status code: ", response.status_code)
         return None
 
-
     data = json.loads(response.text)
-    image_url = data["images"][0]['structure']['full']['url_full']
-
+    image_url = data["images"][0]["structure"]["full"]["url_full"]
 
     # get the last file used
-    picture_fullpath = f"/home/antho/Documents/code/marecottes/picture.jpg"
-    image_fullpath = f"/home/antho/Documents/code/marecottes/image.jpg"
+    picture_fullpath = "/home/antho/Documents/code/marecottes/picture.jpg"
+    image_fullpath = "/home/antho/Documents/code/marecottes/image.jpg"
 
     picture_last_mod = os.path.getmtime(picture_fullpath)
     image_last_mod = os.path.getmtime(image_fullpath)
+    
+    finalpath = picture_fullpath if image_last_mod > picture_last_mod else image_fullpath
 
-    if image_last_mod > picture_last_mod: fullpath = picture_fullpath
-    else: fullpath = image_fullpath
+    urllib.request.urlretrieve(image_url, finalpath)
 
-    print(fullpath)
-
-    urllib.request.urlretrieve(image_url, fullpath)
-
-    return fullpath
+    return finalpath
 
 
 def set_wallpaper(image_path):
@@ -78,16 +70,17 @@ def set_wallpaper(image_path):
     wallpaperHelper.set_wallpaper(path, True)
 
 
-
 def main():
 
-    result = get_image()
-    if result is None: return
+    image = get_image()
+    result = 'no image found'
 
-    set_wallpaper(result)
-    print('Successful')
+    if image is not None:
+        set_wallpaper(image)
+        result = 'sucessfull'
+
+    print(f"{datetime.datetime.strftime(datetime.datetime.now(), '%d/%m/%Y, %H:%M:%S')}: {result}")
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

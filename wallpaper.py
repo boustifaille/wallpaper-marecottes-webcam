@@ -98,6 +98,7 @@ class WallpaperHelper:
                     subprocess.Popen(args,shell=True)
                 elif desktop_env in ["xfce4", 'xfce']:
                     # List all properties in xfce4-desktop
+                    # TODO: newly connected display are not apearing in those result (debian13)
                     props_output = subprocess.check_output(
                         ["xfconf-query", "-c", "xfce4-desktop", "-l"],
                         text=True
