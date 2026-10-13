@@ -54,6 +54,8 @@ class WallpaperHelper:
             s = subprocess.Popen(["ps", "axw"],stdout=subprocess.PIPE)
         except: #Windows
             s = subprocess.Popen(["tasklist", "/v"],stdout=subprocess.PIPE)
+
+        if s.stdout is None: return
         for x in s.stdout:
             if re.search(process, x.decode('utf-8')):
                 return True
